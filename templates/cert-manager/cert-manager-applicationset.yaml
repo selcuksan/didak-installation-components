@@ -28,10 +28,7 @@ spec:
           ref: values
         - repoURL: "https://github.com/selcuksan/didak-installation-components.git"
           targetRevision: HEAD
-          path: environments/{{ "{{" }}cluster{{ "}}" }}/cert-manager/wildcard-didak8s-tls.yaml
-        - repoURL: "https://github.com/selcuksan/didak-installation-components.git"
-          targetRevision: HEAD
-          path: environments/{{ "{{" }}cluster{{ "}}" }}/cert-manager/didak-ca.yaml
+          path: environments/{{ "{{" }}cluster{{ "}}" }}/cert-manager/
       destination:
         server: '{{ "{{" }}url{{ "}}" }}'
         namespace: cert-manager
