@@ -18,15 +18,18 @@ spec:
     spec:
       project: olm
       sources:
-        - repoURL: https://github.com/operator-framework/operator-lifecycle-manager.git
-          path: deploy/chart
-          targetRevision: master
-          helm:
-            valueFiles:
-              - $values/environments/{{ "{{" }}cluster{{ "}}" }}/olm/olm-values.yaml
+        # - repoURL: https://github.com/operator-framework/operator-lifecycle-manager.git
+        #   path: deploy/chart
+        #   targetRevision: master
+        #   helm:
+        #     valueFiles:
+        #       - $values/environments/{{ "{{" }}cluster{{ "}}" }}/olm/olm-values.yaml
+        # - repoURL: "https://github.com/selcuksan/didak-installation-components.git"
+        #   targetRevision: HEAD
+        #   ref: values
         - repoURL: "https://github.com/selcuksan/didak-installation-components.git"
           targetRevision: HEAD
-          ref: values
+          path: environments/{{ "{{" }}cluster{{ "}}" }}/olm/
       destination:
         server: '{{ "{{" }}url{{ "}}" }}'
         namespace: olm
