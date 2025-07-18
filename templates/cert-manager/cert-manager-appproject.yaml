@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  sourceRepos:
+    - https://charts.jetstack.io
+    - https://github.com/selcuksan/didak-installation-components.git
+  destinations:
+    - namespace: cert-manager
+      server: "{{ .Values.env.test.url }}"
+    - namespace: gateway
+      server: "{{ .Values.env.test.url }}"

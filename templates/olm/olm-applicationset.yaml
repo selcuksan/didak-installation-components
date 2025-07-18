@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: olm
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: test
+        url: '{{ .Values.env.test.url }}'
+  template:
+    metadata:
+      name: 'olm-{{ "{{" }}cluster{{ "}}" }}'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "0"
+    spec:
+      project: olm
+      sources:
+        - repoURL: https://github.com/operator-framework/operator-lifecycle-manager.git
+          path: deploy/chart
+          targetRevision: master
+          helm:
+            valueFiles:
+              - $values/environments/{{ "{{" }}cluster{{ "}}" }}/olm/olm-values.yaml
+        - repoURL: 'https://github.com/selcuksan/didak-installation-components.git'
+          targetRevision: HEAD
+          ref: values
+      destination:
+        server: '{{ "{{" }}url{{ "}}" }}'
+        namespace: operator-lifecycle-manager
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true

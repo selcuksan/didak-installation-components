@@ -1,0 +1,8 @@
+env:
+  test:
+    url: https://kubernetes.default.svc
+  dev:
+    url: https://dev.api.tubitak.gov.tr
+
+argocd:
+  namespace: "argocd"

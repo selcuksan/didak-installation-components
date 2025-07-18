@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: test
+            url: "{{ .Values.env.test.url }}"
+  template:
+    metadata:
+      name: 'cert-manager-{{ "{{" }}cluster{{ "}}" }}'
+      namespace: cert-manager
+    spec:
+      project: cert-manager
+      sources:
+        - repoURL: https://charts.jetstack.io
+          chart: cert-manager
+          targetRevision: 1.18.2
+          helm:
+            valueFiles:
+              - $values/environments/{{ "{{" }}cluster{{ "}}" }}/cert-manager/cert-manager-values.yaml
+        - repoURL: "https://github.com/selcuksan/didak-installation-components.git"
+          targetRevision: HEAD
+          path: environments/{{ "{{" }}cluster{{ "}}" }}/cert-manager
+          ref: values
+        - repoURL: "https://github.com/selcuksan/didak-installation-components.git"
+          targetRevision: HEAD
+          path: environments/{{ "{{" }}cluster{{ "}}" }}/cert-manager/wildcard-didak8s-tls.yaml
+        - repoURL: "https://github.com/selcuksan/didak-installation-components.git"
+          targetRevision: HEAD
+          path: environments/{{ "{{" }}cluster{{ "}}" }}/cert-manager/didak-ca.yaml
+      destination:
+        server: '{{ "{{" }}url{{ "}}" }}'
+        namespace: cert-manager
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+spec:
+  generators:
+  - list:
+        elements:
+        - cluster: test
+          url: '{{ .Values.env.test.url }}'
+  template:
+    metadata:
+      name: 'kube-prometheus-stack-{{ "{{" }}cluster{{ "}}" }}'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "-3"
+    spec:
+      project: monitoring
+      sources:
+        - repoURL: https://prometheus-community.github.io/helm-charts
+          chart: kube-prometheus-stack
+          targetRevision: 68.4.5
+          helm:
+            valueFiles:
+              - $values/environments/{{ "{{" }}cluster{{ "}}" }}/monitoring-stack/kube-prometheus-stack-values.yaml
+        - repoURL: "https://github.com/selcuksan/didak-installation-components.git"
+          targetRevision: HEAD
+          ref: values
+      destination:
+        server: '{{ "{{" }}url{{ "}}" }}'
+        namespace: monitoring
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true

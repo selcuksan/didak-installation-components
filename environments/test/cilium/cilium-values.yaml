@@ -1,0 +1,52 @@
+privileged: false
+externalIPs:
+  enabled: true
+gatewayAPI:
+  enabled: true
+  gatewayClass:
+    create: "true"
+hostPort:
+  enabled: false
+hubble:
+  peerService:
+    clusterDomain: cluster.local 
+  enabled: true
+  metrics:
+    enableOpenMetrics: true
+    enabled:
+    - dns
+    - drop
+    - tcp
+    - flow
+    - port-distribution
+    - icmp
+    - httpV2:exemplars=true;labelsContext=source_ip,source_namespace,source_workload,destination_ip,destination_namespace,destination_workload,traffic_direction
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+  tls:
+    auto:
+      enabled: true
+      method: helm
+      certValidityDuration: 1095
+ingressController:
+  enabled: true
+  loadbalancerMode: dedicated
+k8sServiceHost: 10.222.70.180
+k8sServicePort: 6443
+kubeProxyReplacement: true
+l2announcements:
+  enabled: true
+loadBalancer:
+  l7:
+    backend: envoy
+operator:
+  prometheus:
+    enabled: true
+prometheus:
+  enabled: true
+rollOutCiliumPods: true
+envoy:
+  annotation:
+    prometheus.io/scrape:'true'

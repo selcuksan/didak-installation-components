@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: grafana
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: test
+            url: "{{ .Values.env.test.url }}"
+  template:
+    metadata:
+      name: 'grafana-{{ "{{" }}cluster{{ "}}" }}'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "2"
+    spec:
+      project: grafana
+      sources:
+        - repoURL: https://grafana.github.io/helm-charts
+          chart: grafana
+          targetRevision: 9.2.9
+          helm:
+            valueFiles:
+              - $values/environments/{{ "{{" }}cluster{{ "}}" }}/grafana/grafana-values.yaml
+        - repoURL: "https://github.com/selcuksan/didak-installation-components.git"
+          targetRevision: HEAD
+          ref: values
+      destination:
+        server: '{{ "{{" }}url{{ "}}" }}'
+        namespace: grafana
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

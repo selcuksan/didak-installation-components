@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  sourceRepos:
+    - https://prometheus-community.github.io/helm-charts
+    - https://kubernetes-sigs.github.io/metrics-server/
+    - https://grafana.github.io/helm-charts
+    - https://github.com/selcuksan/didak-installation-components.git
+  destinations:
+    - namespace: monitoring
+      server: "{{ .Values.env.test.url }}"
+    - namespace: kube-system
+      server: "{{ .Values.env.test.url }}"
+    

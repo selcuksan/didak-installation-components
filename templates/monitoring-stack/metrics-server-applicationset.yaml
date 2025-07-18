@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: metrics-server
+  namespace: argocd
+spec:
+  generators:
+  - list:
+        elements:
+        - cluster: test
+          url: '{{ .Values.env.test.url }}'
+  template:
+    metadata:
+      name: 'metrics-server-{{ "{{" }}cluster{{ "}}" }}'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "-3"
+    spec:
+      project: monitoring
+      sources:
+        - repoURL: https://kubernetes-sigs.github.io/metrics-server/
+          chart: metrics-server
+          targetRevision: 3.12.0
+          helm:
+            valueFiles:
+              - $values/environments/{{ "{{" }}cluster{{ "}}" }}/monitoring-stack/metrics-server-values.yaml
+        - repoURL: "https://github.com/selcuksan/didak-installation-components.git"
+          targetRevision: HEAD
+          ref: values
+      destination:
+        server: '{{ "{{" }}url{{ "}}" }}'
+        namespace: monitoring
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cilium
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: test
+        url: '{{ .Values.env.test.url }}'
+  template:
+    metadata:
+      name: 'cilium-{{ "{{" }}cluster{{ "}}" }}'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "0"
+    spec:
+      project: cilium
+      sources:
+        - repoURL: https://helm.cilium.io/
+          chart: cilium
+          targetRevision: 1.17.5
+          helm:
+            valueFiles:
+              - $values/environments/{{ "{{" }}cluster{{ "}}" }}/cilium/cilium-values.yaml
+        - repoURL: 'https://github.com/selcuksan/didak-installation-components.git'
+          targetRevision: HEAD
+          ref: values
+      destination:
+        server: '{{ "{{" }}url{{ "}}" }}'
+        namespace: kube-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

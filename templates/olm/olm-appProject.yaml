@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: olm
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  sourceRepos:
+    - https://github.com/operator-framework/operator-lifecycle-manager.git
+    - https://github.com/selcuksan/didak-installation-components.git
+  sourceNamespaces:
+    - argocd
+  destinations:
+    - namespace: operators
+      server: "{{ .Values.env.test.url }}"
+    - namespace: operator-lifecycle-manager
+      server: "{{ .Values.env.test.url }}"

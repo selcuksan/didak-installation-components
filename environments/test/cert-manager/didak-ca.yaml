@@ -1,0 +1,40 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: didak-self-signed
+  namespace: cert-manager
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: didak-custom-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  duration: 87600h       # 10 yıl
+  renewBefore: 720h      # 30 gün kala yenile
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  secretName: didak-custom-ca
+  commonName: "*.apps.didak8s.tbtk.gov.tr"
+  subject:
+    organizations:
+      - TUBITAK
+    organizationalUnits:
+      - Bilgem yte
+  issuerRef:
+    name: didak-self-signed
+    kind: Issuer
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: didak-ca-issuer
+  annotations:
+    cert-manager.io/description: "didak root CA kullanılarak oluşturulan Issuer"
+spec:
+  ca:
+    secretName: didak-custom-ca

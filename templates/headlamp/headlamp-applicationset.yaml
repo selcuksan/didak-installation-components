@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: headlamp
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: test
+            url: "{{ .Values.env.test.url }}"
+  template:
+    metadata:
+      name: 'headlamp-{{ "{{" }}cluster{{ "}}" }}'
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: "2"
+    spec:
+      project: headlamp
+      sources:
+        - repoURL: https://kubernetes-sigs.github.io/headlamp/
+          chart: headlamp
+          targetRevision: 0.32.1
+          helm:
+            valueFiles:
+              - $values/environments/{{ "{{" }}cluster{{ "}}" }}/headlamp/headlamp-values.yaml
+        - repoURL: "https://github.com/selcuksan/didak-installation-components.git"
+          targetRevision: HEAD
+          ref: values
+      destination:
+        server: '{{ "{{" }}url{{ "}}" }}'
+        namespace: headlamp
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

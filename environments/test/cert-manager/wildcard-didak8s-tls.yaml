@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-didak8s-tls
+  namespace: gateway
+spec:
+  secretName: wildcard-didak8s-tls
+  duration: 8760h
+  renewBefore: 720h
+  commonName: "*.apps.didak8s.tbtk.gov.tr"
+  dnsNames:
+    - "*.apps.didak8s.tbtk.gov.tr"
+    - "apps.didak8s.tbtk.gov.tr"
+  issuerRef:
+    name: didak-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

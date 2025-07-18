@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: headlamp
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  sourceRepos:
+    - https://kubernetes-sigs.github.io/headlamp/
+    - https://github.com/selcuksan/didak-installation-components.git
+  destinations:
+    - namespace: headlamp
+      server: "{{ .Values.env.test.url }}"
