@@ -10,6 +10,7 @@ spec:
   sourceRepos:
     - https://github.com/operator-framework/operator-lifecycle-manager.git
     - https://github.com/selcuksan/didak-installation-components.git
+    - oci://ghcr.io/cloudtooling/helm-charts/olm
   sourceNamespaces:
     - argocd
   destinations:

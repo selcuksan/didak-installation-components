@@ -18,8 +18,8 @@ spec:
     spec:
       project: olm
       sources:
-        - repoURL: https://github.com/operator-framework/operator-lifecycle-manager.git
-          path: deploy/chart
+        - repoURL: oci://ghcr.io/cloudtooling/helm-charts/olm
+          chart: 
           targetRevision: master
           helm:
             valueFiles:
