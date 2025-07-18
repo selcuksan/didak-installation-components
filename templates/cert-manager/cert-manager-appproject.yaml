@@ -15,3 +15,5 @@ spec:
       server: "{{ .Values.env.test.url }}"
     - namespace: gateway
       server: "{{ .Values.env.test.url }}"
+    - namespace: kube-system
+      server: "{{ .Values.env.test.url }}"
