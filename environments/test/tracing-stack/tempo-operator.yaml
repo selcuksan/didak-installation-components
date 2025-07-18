@@ -7,5 +7,5 @@ spec:
   channel: alpha
   name: tempo-operator
   source: operatorhubio-catalog
-  sourceNamespace: olm
+  sourceNamespace: operator-lifecycle-manager
   installPlanApproval: Automatic
