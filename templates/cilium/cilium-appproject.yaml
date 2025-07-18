@@ -13,3 +13,5 @@ spec:
   destinations:
     - namespace: kube-system
       server: "{{ .Values.env.test.url }}"
+    - namespace: cilium-secrets
+      server: "{{ .Values.env.test.url }}"
