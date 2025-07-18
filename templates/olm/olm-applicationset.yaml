@@ -29,7 +29,7 @@ spec:
           ref: values
       destination:
         server: '{{ "{{" }}url{{ "}}" }}'
-        namespace: operator-lifecycle-manager
+        namespace: olm
       syncPolicy:
         automated:
           prune: true

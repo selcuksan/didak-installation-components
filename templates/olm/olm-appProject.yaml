@@ -15,5 +15,5 @@ spec:
   destinations:
     - namespace: operators
       server: "{{ .Values.env.test.url }}"
-    - namespace: operator-lifecycle-manager
+    - namespace: olm
       server: "{{ .Values.env.test.url }}"
