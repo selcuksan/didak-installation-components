@@ -3,6 +3,8 @@ kind: ApplicationSet
 metadata:
   name: tempo
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   generators:
     - list:
@@ -11,10 +13,8 @@ spec:
             url: "{{ .Values.env.test.url }}"
   template:
     metadata:
-      name: "tempo-{{ "{{" }}cluster{{ "}}" }}"
+      name: 'tempo-{{ "{{" }}cluster{{ "}}" }}'
       namespace: argocd
-      annotations:
-        argocd.argoproj.io/sync-wave: "1" 
     spec:
       project: tracing
       source:
@@ -22,7 +22,7 @@ spec:
         targetRevision: HEAD
         path: environments/{{ "{{" }}cluster{{ "}}" }}/tracing-stack/
       destination:
-        server: "{{ "{{" }}url{{ "}}" }}"
+        server: '{{ "{{" }}url{{ "}}" }}'
         namespace: tracing
       syncPolicy:
         automated:

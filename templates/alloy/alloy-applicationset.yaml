@@ -3,6 +3,8 @@ kind: ApplicationSet
 metadata:
   name: alloy
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   generators:
   - list:
@@ -13,8 +15,6 @@ spec:
     metadata:
       name: 'alloy-{{ "{{" }}cluster{{ "}}" }}'
       namespace: argocd
-      annotations:
-        argocd.argoproj.io/sync-wave: "0"
     spec:
       project: alloy
       sources:
